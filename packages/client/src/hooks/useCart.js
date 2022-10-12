@@ -9,7 +9,6 @@ const initialState = {
 const calculateCartTotal = (cartItems) => {
   let total = 0
   cartItems.map((item) => (total += item.price * item.quantity))
-  console.log(total)
   return parseFloat(total.toFixed(2))
 }
 

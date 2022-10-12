@@ -13,13 +13,19 @@ const initialState = {
 }
 export default function CheckoutPage(props) {
   const [data, setData] = useState(initialState)
-  const { state, resetCart, calculateCartTotal } = useProvideCart()
+  const { state, resetCart } = useProvideCart()
 
+  const calculateCartTotal = (cartItems) => {
+    let total = 0
+    cartItems.map((item) => (total += item.price * item.quantity))
+    return parseFloat(total.toFixed(2))
+  }
   const placeOrder = async (orderFormData) => {
-    console.log('handlePlaceOrder', orderFormData)
+    console.log('handlePlaceOrder', orderFormData) 
     let orderData = {
       customerDetails: orderFormData,
       items: state.cart,
+      orderTotal: calculateCartTotal(state.cart),
     }
     setData({
       ...data,
