@@ -20,7 +20,6 @@ export default function CheckoutPage(props) {
     let orderData = {
       customerDetails: orderFormData,
       items: state.cart,
-      orderTotal: calculateCartTotal(),
     }
     setData({
       ...data,

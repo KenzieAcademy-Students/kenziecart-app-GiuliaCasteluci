@@ -8,9 +8,8 @@ const initialState = {
 
 const calculateCartTotal = (cartItems) => {
   let total = 0
-
   cartItems.map((item) => (total += item.price * item.quantity))
-
+  console.log(total)
   return parseFloat(total.toFixed(2))
 }
 
@@ -36,11 +35,13 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload)
       }
+      const cartTotal = calculateCartTotal(nextCart)
 
       return {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount + 1,
+        cartTotal: cartTotal,
       }
     case 'REMOVE_ITEM':
       nextCart = nextCart
@@ -55,7 +56,6 @@ const reducer = (state, action) => {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount > 0 ? state.itemCount - 1 : 0,
-        cartTotal: calculateCartTotal(nextCart),
       }
     case 'REMOVE_ALL_ITEMS':
       let quantity = state.cart.find((i) => i._id === action.payload).quantity
