@@ -17,7 +17,7 @@ const orderSchema = new mongoose.Schema(
     },
     customerAddress2: {
       type: String,
-      required: true,
+      required: false,
     },
     items: [
       {
