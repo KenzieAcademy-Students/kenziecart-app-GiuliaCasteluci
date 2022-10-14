@@ -35,11 +35,8 @@ router
       */
     try {
       const newOrder = new Order(orderData)
-      newOrder.save((err) => {
-        if (err) return handleError(err);
-        // saved!
-      });
-      res.json(newOrder._id)
+      newOrder.save()
+      res.send(newOrder._id)
       console.log(newOrder)
     } catch (error) {
       next(new Error('Error Placing Order'))
