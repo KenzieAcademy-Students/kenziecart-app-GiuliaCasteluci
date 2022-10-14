@@ -1,48 +1,48 @@
-import React, { useReducer, useContext, createContext } from 'react'
+import React, { useReducer, useContext, createContext } from "react";
 
 const initialState = {
   cart: [],
   itemCount: 0,
   cartTotal: 0,
-}
+};
 
 const calculateCartTotal = (cartItems) => {
-  let total = 0
-  cartItems.map((item) => (total += item.price * item.quantity))
-  return parseFloat(total.toFixed(2))
-}
+  let total = 0;
+  cartItems.map((item) => (total += item.price * item.quantity));
+  return parseFloat(total.toFixed(2));
+};
 
 const reducer = (state, action) => {
   let nextCart = [...state.cart];
   switch (action.type) {
-    case 'ADD_ITEM':
+    case "ADD_ITEM":
       const existingIndex = nextCart.findIndex(
         (item) => item._id === action.payload._id
-      )
+      );
 
       const numItemsToAdd = action.payload.quantity;
 
       if (existingIndex >= 0) {
         const newQuantity = parseInt(
           nextCart[existingIndex].quantity + numItemsToAdd
-        )
+        );
 
         nextCart[existingIndex] = {
           ...action.payload,
           quantity: newQuantity,
-        }
+        };
       } else {
-        nextCart.push(action.payload)
+        nextCart.push(action.payload);
       }
-      const cartTotal = calculateCartTotal(nextCart)
+      const cartTotal = calculateCartTotal(nextCart);
 
       return {
         ...state,
         cart: nextCart,
-        itemCount: state.itemCount + 1,
-        cartTotal: cartTotal,
-      }
-    case 'REMOVE_ITEM':
+        itemCount: state.itemCount + numItemsToAdd,
+        cartTotal: calculateCartTotal(nextCart),
+      };
+    case "REMOVE_ITEM":
       nextCart = nextCart
         .map((item) =>
           item._id === action.payload
@@ -55,27 +55,27 @@ const reducer = (state, action) => {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount > 0 ? state.itemCount - 1 : 0,
-      }
-    case 'REMOVE_ALL_ITEMS':
-      let quantity = state.cart.find((i) => i._id === action.payload).quantity
+      };
+    case "REMOVE_ALL_ITEMS":
+      let quantity = state.cart.find((i) => i._id === action.payload).quantity;
       return {
         ...state,
         cart: state.cart.filter((item) => item._id !== action.payload),
         itemCount: state.itemCount > 0 ? state.itemCount - quantity : 0,
-      }
-    case 'RESET_CART':
-      return { ...initialState }
+      };
+    case "RESET_CART":
+      return { ...initialState };
     default:
-      return state
+      return state;
   }
-}
+};
 
-const cartContext = createContext()
+const cartContext = createContext();
 
 // Provider component that wraps your app and makes cart object ...
 // ... available to any child component that calls useCart().
 export function ProvideCart({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <cartContext.Provider
       value={{
@@ -85,49 +85,49 @@ export function ProvideCart({ children }) {
     >
       {children}
     </cartContext.Provider>
-  )
+  );
 }
 
 // Hook for child components to get the cart object ...
 // ... and re-render when it changes.
 export const useCart = () => {
-  return useContext(cartContext)
-}
+  return useContext(cartContext);
+};
 
 // Provider hook that creates cart object and handles state
 const useProvideCart = () => {
-  const { state, dispatch } = useCart()
+  const { state, dispatch } = useCart();
 
   const addItem = (item) => {
     dispatch({
-      type: 'ADD_ITEM',
+      type: "ADD_ITEM",
       payload: item,
-    })
-  }
+    });
+  };
 
   const removeItem = (id) => {
     dispatch({
-      type: 'REMOVE_ITEM',
+      type: "REMOVE_ITEM",
       payload: id,
-    })
-  }
+    });
+  };
 
   const removeAllItems = (id) => {
     dispatch({
-      type: 'REMOVE_ALL_ITEMS',
+      type: "REMOVE_ALL_ITEMS",
       payload: id,
-    })
-  }
+    });
+  };
 
   const resetCart = () => {
     dispatch({
-      type: 'RESET_CART',
-    })
-  }
+      type: "RESET_CART",
+    });
+  };
 
   const isItemInCart = (id) => {
-    return !!state.cart.find((item) => item._id === id)
-  }
+    return !!state.cart.find((item) => item._id === id);
+  };
 
   /*  Check for saved local cart on load and dispatch to set initial state
   useEffect(() => {
@@ -147,7 +147,7 @@ const useProvideCart = () => {
     removeAllItems,
     resetCart,
     isItemInCart,
-  }
-}
+  };
+};
 
-export default useProvideCart
+export default useProvideCart;

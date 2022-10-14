@@ -29,24 +29,22 @@ router
       items: itemIdList,
       orderTotal: orderTotal,
     };
-    console.log(orderData)
-  /* create new order using Order model
+    console.log(orderData);
+    /* create new order using Order model
         and return order ID
       */
     try {
-      const newOrder = new Order(orderData)
-      newOrder.save()
-      res.send(newOrder._id)
-      console.log(newOrder)
+      const newOrder = new Order(orderData);
+      newOrder.save();
+      res.send(newOrder._id);
+      console.log(newOrder);
     } catch (error) {
-      next(new Error('Error Placing Order'))
+      next(new Error("Error Placing Order"));
     }
   })
 
   .delete((req, res, next) => {
-    next(new Error('not implemented'))
-  })
+    next(new Error("not implemented"));
+  });
 
-
-module.exports = router
-
+module.exports = router;
