@@ -46,7 +46,7 @@ const useCurrency = () => {
     const getPrice = (amount) => {
         const priceToDisplay = (amount * state.multiplier).toFixed(2);
 
-        return `{state.symbol}${priceToDisplay}`
+        return `${state.symbol}${priceToDisplay}`
     }
     return {
         state,

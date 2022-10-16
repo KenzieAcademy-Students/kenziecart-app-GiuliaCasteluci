@@ -3,7 +3,7 @@ import authRouter from './auth'
 import userRouter from './users'
 import ordersRouter from './orders'
 import productRouter from './products'
-import couponsRouter from '.coupons'
+import couponsRouter from './coupons'
 
 const router = express.Router()
 
