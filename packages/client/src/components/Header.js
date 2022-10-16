@@ -26,7 +26,7 @@ export default function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto mr-5" style={{ justifyContent: "center" }}>
-            <DropdownButton tittle= {`Select preferred currency: ${currency.symbol}`}>
+            <DropdownButton title= {`Select preferred currency: ${currency.symbol}`}>
               <Dropdown.Item onClick={() => setCurrency("$")}>$</Dropdown.Item>
               <Dropdown.Item onClick={() => setCurrency("€")}>€</Dropdown.Item>
             </DropdownButton>
