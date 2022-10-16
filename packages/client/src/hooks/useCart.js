@@ -1,9 +1,17 @@
 import React, { useReducer, useContext, createContext } from "react";
+import { useEffect } from "react";
 
 const initialState = {
   cart: [],
   itemCount: 0,
   cartTotal: 0,
+};
+
+const cItemCount = (cartItems) => {
+  let total = 0;
+  cartItems.forEach((item) => (total += item.quantity));
+
+  return total;
 };
 
 const calculateCartTotal = (cartItems) => {
@@ -34,7 +42,10 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload);
       }
-      const cartTotal = calculateCartTotal(nextCart);
+
+      localStorage.setItem("KenzieCart", JSON.stringify(nextCart));
+
+      // const cartTotal = calculateCartTotal(nextCart);
 
       return {
         ...state,
@@ -51,20 +62,35 @@ const reducer = (state, action) => {
         )
         .filter((item) => item.quantity > 0);
 
+        localStorage.setItem("KenzieCart", JSON.stringify(nextCart));
+
       return {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount > 0 ? state.itemCount - 1 : 0,
+        cartTotal: calculateCartTotal(nextCart),
       };
     case "REMOVE_ALL_ITEMS":
       let quantity = state.cart.find((i) => i._id === action.payload).quantity;
+
+      nextCart = state.cart.filter((item) => item._id !== action.payload)
+      localStorage.setItem("KenzieCart", JSON.stringify(nextCart));
       return {
         ...state,
-        cart: state.cart.filter((item) => item._id !== action.payload),
+        cart: nextCart,
         itemCount: state.itemCount > 0 ? state.itemCount - quantity : 0,
+        cartTotal: 0,
       };
     case "RESET_CART":
+      localStorage.setItem("KenzieCart", "[]")
       return { ...initialState };
+    case "INIT_SAVED_CART":
+      return {
+        ...state,
+        cart: action.payload,
+        itemCount: cItemCount(action.payload),
+        cartTotal: cItemCount(action.payload),
+      };
     default:
       return state;
   }
@@ -129,16 +155,31 @@ const useProvideCart = () => {
     return !!state.cart.find((item) => item._id === id);
   };
 
-  /*  Check for saved local cart on load and dispatch to set initial state
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem('KenzieCart')) || false
-    if (savedCart) {
+  const updateLocalCart = () => {
+    localStorage.setItem("KenzieCart", JSON.stringify(state.cart));
+  };
+
+  const loadLocalCart = () => {
+    const savedCart = JSON.parse(localStorage.getItem("KenzieCart")) || false;
+
       dispatch({
-        type: 'INIT_SAVED_CART',
-        payload: savedCart,
-      })
+        type: "INIT_SAVED_CART",
+        payload: savedCart ? savedCart : []
+      });
+    
+  };
+
+ 
+  //  Check for saved local cart on load and dispatch to set initial state
+  useEffect(() => {
+    loadLocalCart();
+  },[] );
+
+  useEffect(() => {
+    if (state !== initialState) {
+      updateLocalCart();
     }
-  }, [dispatch]) */
+  }, [state]);
 
   return {
     state,

@@ -6,10 +6,12 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useUI, useProvideCart } from 'hooks'
 import './CartItem.scss'
 import { ItemCounter } from 'components'
+import useCurrency from 'hooks/useCurrency'
 
 export default function CartItem({ item }) {
-  const { closeSidebar } = useUI()
-  const { removeAllItems } = useProvideCart()
+  const {getPrice} = useCurrency();
+  const { closeSidebar } = useUI();
+  const { removeAllItems } = useProvideCart();
 
   return (
     <div className='item-box'>
@@ -46,7 +48,7 @@ export default function CartItem({ item }) {
               <p className='item-label'>price</p>
             </Col>
             <Col xs='3' className='text-right'>
-              <p className='price item-value'>{` $${item.price}`}</p>
+              <p className='price item-value'>{getPrice(item.price)}</p>
             </Col>
           </Row>
           <Row className='mb-2 align-items-center'>

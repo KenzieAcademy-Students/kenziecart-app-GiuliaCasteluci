@@ -34,8 +34,7 @@ export default function CheckoutPage(props) {
     })
     try {
       const orderConfirmation = await createOrder(orderData)
-      console.log(orderConfirmation)
-      toast('Order Placed Successfully')
+      toast('Order ID:${orderConfirmation.data} Placed Successfully' )
       resetCart()
       setData({
         isSubmitting: false,
