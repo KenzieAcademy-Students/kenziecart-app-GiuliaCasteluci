@@ -1,4 +1,3 @@
-
 const { useReducer, useContext, createContext } = require('react');
 
 const initialState = {
@@ -10,8 +9,8 @@ const reducer = (state,action) => {
     switch (action.type) {
         case "SET_CURRENCY":
             return {
-                symbol: action.paylod,
-                multiplier: action.paylod === "$" ? 1 : 0.8
+                symbol: action.payload,
+                multiplier: action.payload === "$" ? 1 : 0.8
             }
     default:
         return state;
@@ -37,10 +36,10 @@ const useCurrency = () => {
     const setCurrency = (symbol) => {
         
         dispatch({
-            
             type: 'SET_CURRENCY',
             payload: symbol
         })
+        console.log(state)
     }
 
     const getPrice = (amount) => {
