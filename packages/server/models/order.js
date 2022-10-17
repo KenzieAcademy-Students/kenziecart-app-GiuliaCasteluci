@@ -29,6 +29,10 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    appliedCoupon: {
+      type: ObjectId,
+      ref: 'Coupon',
+    }
   },
   { timestamps: true }
 )

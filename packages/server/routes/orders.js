@@ -1,5 +1,5 @@
 import express from "express";
-import { Order } from "../models";
+import { Coupon, Order } from "../models";
 
 const router = express.Router();
 
@@ -19,7 +19,10 @@ router
       customerDetails: { firstName, lastName, email, address1, address2 },
       items,
       orderTotal,
+      couponCode,
     } = req.body;
+
+    const coupon = await Coupon.findOne({code: couponCode.toUpperCase()})
     const itemIdList = items.map((i) => i._id);
     const orderData = {
       customerName: `${firstName} ${lastName}`,
@@ -27,7 +30,8 @@ router
       customerAddress1: address1,
       customerAddress2: address2,
       items: itemIdList,
-      orderTotal: orderTotal,
+      orderTotal: orderTotal * (coupon ? (1- coupon.discount) : 1),
+      appliedCoupon: coupon,
     };
     console.log(orderData);
     /* create new order using Order model

@@ -5,6 +5,7 @@ const initialState = {
   cart: [],
   itemCount: 0,
   cartTotal: 0,
+  appliedCoupon: '',
 };
 
 const cItemCount = (cartItems) => {
@@ -91,6 +92,14 @@ const reducer = (state, action) => {
         itemCount: cItemCount(action.payload),
         cartTotal: cItemCount(action.payload),
       };
+    case "APPLY_COUPON":
+      const price = calculateCartTotal(state.cart) 
+      let discountPrice= price - (price * action.payload.discount)
+      return {
+        ...state,
+        appliedCoupon: action.payload.code,
+        cartTotal: discountPrice,
+      }
     default:
       return state;
   }
@@ -168,7 +177,12 @@ const useProvideCart = () => {
       });
     
   };
-
+  const applyCoupon = (coupon) => {
+    dispatch({
+      type: "APPLY_COUPON",
+      payload: coupon
+    })
+  }
  
   //  Check for saved local cart on load and dispatch to set initial state
   useEffect(() => {
@@ -188,6 +202,7 @@ const useProvideCart = () => {
     removeAllItems,
     resetCart,
     isItemInCart,
+    applyCoupon,
   };
 };
 
